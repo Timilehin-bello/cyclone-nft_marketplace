@@ -1,27 +1,19 @@
 {
   "name": "cyclone-nft_marketplace",
-  "version": "1.0.0",
-  "description": "Cyclone NFT Marketplace",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Timilehin-bello/cyclone-nft_marketplace.git"
-  },
-  "author": "Oluwatimilehin Bello",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Timilehin-bello/cyclone-nft_marketplace/issues"
-  },
-  "homepage": "https://github.com/Timilehin-bello/cyclone-nft_marketplace#readme",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "hardhat": "^2.12.2"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.0",
+    "next": "13.0.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-icons": "^4.6.0",
     "solc": "^0.8.17"
   }
 }

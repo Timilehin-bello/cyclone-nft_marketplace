@@ -1,0 +1,6 @@
+import React, { useState, UseEffect } from "react";
+import Style from "./NavBar.module.css";
+
+export const NavBar = () => {
+  return <div>NavBar</div>;
+};

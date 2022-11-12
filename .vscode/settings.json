@@ -1,3 +1,4 @@
 {
-  "solidity-va.debug.parser.showExceptions": true
+  "solidity-va.debug.parser.showExceptions": false,
+  "solidity-va.parser.parseImports": false
 }

@@ -1,15 +1,13 @@
+
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity >=0.8.4;
+
 
 import "@openzeppelin/contracts/utils/Counters.sol"; // Keeps track of NFT item creation and sales
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "hardhat/console.sol";
 
-
-// interface  ERC721URIStorage {
-//     function inheritedFunction() external;
-// }
 
 contract CycloneNFTMarketplace is ERC721URIStorage {
     using Counters for Counters.Counter;
@@ -189,5 +187,4 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         return items;
     }
 }
-
 
