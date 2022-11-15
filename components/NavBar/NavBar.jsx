@@ -1,9 +1,9 @@
-import React, { useState, UseEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { MdNotifications } from "react-icons/md";
 import { CgMenuRight, CgMenuLeft } from "react-icons/cg";
 import { BsSearch } from "react-icons/bs";
 
-import { Discover, HelpCenter, Notification, Profile, SideBar } from "index";
+import { Discover, HelpCenter, Notification, Profile, SideBar } from "./index";
 import { Button } from "../importComponents";
 import Style from "./NavBar.module.css";
 import images from "../../img";
@@ -11,7 +11,7 @@ import images from "../../img";
 import Image from "next/image";
 import Link from "next/link";
 
-export const NavBar = () => {
+const NavBar = () => {
   const [discover, setDiscover] = useState(false);
   const [help, setHelp] = useState(false);
   const [notification, setNotification] = useState(false);
@@ -46,6 +46,25 @@ export const NavBar = () => {
       setProfile(false);
     } else {
       setNotification(false);
+    }
+  };
+
+  const openProfile = () => {
+    if (!profile) {
+      setProfile(true);
+      setHelp(false);
+      setDiscover(false);
+      setNotification(false);
+    } else {
+      setProfile(false);
+    }
+  };
+
+  const openSideBar = () => {
+    if (!openSideBar) {
+      setOpenSideMenu(true);
+    } else {
+      setOpenSideMenu(false);
     }
   };
 
@@ -108,8 +127,40 @@ export const NavBar = () => {
             />
             {notification && <Notification />}
           </div>
+
+          <div className={Style.navbar_container_right_button}>
+            <Button btnText="Create" />
+          </div>
+
+          <div className={Style.navbar_container_right_profile_box}>
+            <div className={Style.navbar_container_right_profile}>
+              <Image
+                className={Style.navbar_container_right_profile}
+                src={images.user1}
+                alt="Profile"
+                width={40}
+                height={40}
+                onClick={() => openProfile}
+              />
+              {profile && <Profile />}
+            </div>
+          </div>
+
+          <div className={Style.navbar_container_right_menuBtn}>
+            <CgMenuRight
+              className={Style.menuIcon}
+              onClick={() => openSideBar()}
+            />
+          </div>
         </div>
       </div>
+      {openSideMenu && (
+        <div className={Style.SideBar}>
+          <SideBar setOpenSideMenu={setOpenSideMenu} />
+        </div>
+      )}
     </div>
   );
 };
+
+export default NavBar;
