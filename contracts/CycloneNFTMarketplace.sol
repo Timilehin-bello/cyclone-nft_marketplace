@@ -1,22 +1,22 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
-
 
 import "@openzeppelin/contracts/utils/Counters.sol"; // Keeps track of NFT item creation and sales
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "hardhat/console.sol";
 
-
 contract CycloneNFTMarketplace is ERC721URIStorage {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
-    address payable owner;
     uint256 listingPrice = 0.0022 ether;
-    mapping (uint256=>MarketItem) private idMarketItem;
+    address payable owner;
+
+    constructor() ERC721("Cyclone NFT ", "CNT") {
+        owner == payable(msg.sender);
+    }
 
     struct MarketItem {
         uint256 tokenId;
@@ -26,6 +26,8 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         bool sold;
     }
 
+    mapping(uint256 => MarketItem) private idMarketItem;
+
     event idMarketItemCreated(
         uint256 indexed tokenId,
         address seller,
@@ -34,15 +36,11 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         bool sold
     );
 
-    // modifier onlyOwner() {
-    //     require(msg.sender == owner, "Oops!, you are not authorized to change the listing price");
-    // }
-
-    constructor() ERC721("Cyclone NFT Token", "CNT") {
-        owner == payable(msg.sender);
-    }
-
-    function updateListingPrice(uint256 _listingPrice) public payable /*onlyOwner*/{
+    function updateListingPrice(uint256 _listingPrice) public payable {
+        require(
+            owner == msg.sender,
+            "Oops!, CycloneNFTMarketplace listing price can only be updated by Marketplace Owner"
+        );
         listingPrice = _listingPrice;
     }
 
@@ -50,7 +48,11 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         return listingPrice;
     }
 
-    function createToken(string memory tokenURI, uint256 price) public payable returns (uint256) {
+    function createToken(string memory tokenURI, uint256 price)
+        public
+        payable
+        returns (uint256)
+    {
         _tokenIds.increment();
 
         uint256 newTokenId = _tokenIds.current();
@@ -62,13 +64,20 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         return newTokenId;
     }
 
-
-    function createMarketItem (uint256 tokenId, uint256 price) private {
+    function createMarketItem(uint256 tokenId, uint256 price) private {
         require(price > 0, "The Price should be at least 1");
-        require(msg.value == listingPrice, "Price must be the same value as listing price ");
+        require(
+            msg.value == listingPrice,
+            "Price must be the same value as listing price "
+        );
 
-        idMarketItem[tokenId] = MarketItem(tokenId, payable(msg.sender), payable(address(this)), price, false);
-
+        idMarketItem[tokenId] = MarketItem(
+            tokenId,
+            payable(msg.sender),
+            payable(address(this)),
+            price,
+            false
+        );
 
         _transfer(msg.sender, address(this), tokenId);
 
@@ -81,11 +90,16 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         );
     }
 
+    function reSellToken(uint256 tokenId, uint256 price) public payable {
+        require(
+            idMarketItem[tokenId].owner == msg.sender,
+            "Oops!, transaction denied, only owner can make such request"
+        );
 
-    function reSellToken (uint256 tokenId, uint256 price) public payable {
-        require(idMarketItem[tokenId].owner == msg.sender,"Oops!, transaction denied, only owner can make such request");
-
-        require(msg.value == listingPrice, "Price must be the same value as listing price");
+        require(
+            msg.value == listingPrice,
+            "Price must be the same value as listing price"
+        );
 
         idMarketItem[tokenId].sold = false;
         idMarketItem[tokenId].price = price;
@@ -94,12 +108,15 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
 
         _itemsSold.decrement();
         _transfer(msg.sender, address(this), tokenId);
-
     }
+
     function createMarketSale(uint256 tokenId) public payable {
         uint256 price = idMarketItem[tokenId].price;
 
-        require(msg.value == price, "Opps!, you'd need to set a price tag to continue with Sale");
+        require(
+            msg.value == price,
+            "Opps!, you'd need to set a price tag to continue with Sale"
+        );
 
         idMarketItem[tokenId].owner = payable(msg.sender);
         idMarketItem[tokenId].sold = true;
@@ -107,13 +124,13 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
 
         _itemsSold.increment();
 
-        _transfer(msg.sender, address(this), tokenId);  // a/m/t
+        _transfer(msg.sender, address(this), tokenId); // a/m/t
 
         payable(owner).transfer(listingPrice);
         payable(idMarketItem[tokenId].seller).transfer(msg.value);
     }
 
-    function fetchMarketItem() public view returns(MarketItem[] memory) {
+    function fetchMarketItem() public view returns (MarketItem[] memory) {
         uint256 itemCount = _tokenIds.current();
         uint256 unSoldItemCount = _tokenIds.current() - _itemsSold.current();
         uint256 currentIndex = 0;
@@ -121,7 +138,7 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         MarketItem[] memory items = new MarketItem[](unSoldItemCount);
 
         for (uint256 i = 0; i < itemCount; i++) {
-            if(idMarketItem[i + 1].owner == address(this)) {
+            if (idMarketItem[i + 1].owner == address(this)) {
                 uint256 currentId = i + 1;
 
                 MarketItem storage currentItem = idMarketItem[currentId];
@@ -132,20 +149,20 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         return items;
     }
 
-    function fetchMyNFT() public view returns(MarketItem[] memory) {
+    function fetchMyNFT() public view returns (MarketItem[] memory) {
         uint256 totalCount = _tokenIds.current();
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
 
         for (uint256 i = 0; i < totalCount; i++) {
-            if(idMarketItem[i + 1].owner == msg.sender) {
+            if (idMarketItem[i + 1].owner == msg.sender) {
                 itemCount += 1;
             }
         }
 
         MarketItem[] memory items = new MarketItem[](itemCount);
-        for(uint256 i = 0; i < totalCount; i++) {
-            if(idMarketItem[i + 1].owner == msg.sender) {
+        for (uint256 i = 0; i < totalCount; i++) {
+            if (idMarketItem[i + 1].owner == msg.sender) {
                 uint256 currentId = i + 1;
                 MarketItem storage currentItem = idMarketItem[currentId];
                 items[currentIndex] = currentItem;
@@ -178,4 +195,3 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         return items;
     }
 }
-
