@@ -11,11 +11,15 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
 
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
-    uint256 listingPrice = 0.0022 ether;
+    uint256 listingPrice = 0.0020 ether;
     address payable owner;
 
-    constructor() ERC721("Cyclone NFT ", "CNT") {
-        owner == payable(msg.sender);
+    constructor() ERC721("Cyclone NFT", "CNT") {
+        owner = payable(msg.sender);
+    }
+
+    function __owner() public view returns (address payable) {
+        return owner;
     }
 
     struct MarketItem {
@@ -26,8 +30,6 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         bool sold;
     }
 
-    mapping(uint256 => MarketItem) private idMarketItem;
-
     event idMarketItemCreated(
         uint256 indexed tokenId,
         address seller,
@@ -35,6 +37,8 @@ contract CycloneNFTMarketplace is ERC721URIStorage {
         uint256 price,
         bool sold
     );
+
+    mapping(uint256 => MarketItem) private idMarketItem;
 
     function updateListingPrice(uint256 _listingPrice) public payable {
         require(
