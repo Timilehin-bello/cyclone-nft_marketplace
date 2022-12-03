@@ -1,5 +1,0 @@
-{
-  "solidity-va.debug.parser.showExceptions": false,
-  "solidity-va.parser.parseImports": true,
-  "solidity-va.tools.surya.option.negModifiers": true
-}
