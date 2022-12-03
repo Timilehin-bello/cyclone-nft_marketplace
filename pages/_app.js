@@ -3,7 +3,7 @@ import { NavBar } from "../components/importComponents";
 
 const MyApp = ({ Component, pageProps }) => (
   <div>
-    {/* <NavBar /> */}
+    <NavBar />
     <Component {...pageProps} />
   </div>
 );

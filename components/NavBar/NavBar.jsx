@@ -20,29 +20,29 @@ const NavBar = () => {
 
   const openMenu = (e) => {
     const btnText = e.target.innerText;
-    if (btnText === "Discover") {
+    if (btnText == "Discover") {
       setDiscover(true);
       setHelp(false);
       setNotification(false);
       setProfile(false);
-    } else if (btnText === "Help Center") {
+    } else if (btnText == "Help Center") {
       setDiscover(false);
       setHelp(true);
       setNotification(false);
-      setProfile(true);
+      setProfile(false);
     } else {
       setDiscover(false);
       setHelp(false);
       setNotification(false);
-      setProfile(true);
+      setProfile(false);
     }
   };
 
   const openNotification = () => {
     if (!notification) {
-      setDiscover(true);
+      setNotification(true);
+      setDiscover(false);
       setHelp(false);
-      setNotification(false);
       setProfile(false);
     } else {
       setNotification(false);
@@ -61,7 +61,7 @@ const NavBar = () => {
   };
 
   const openSideBar = () => {
-    if (!openSideBar) {
+    if (!openSideMenu) {
       setOpenSideMenu(true);
     } else {
       setOpenSideMenu(false);
@@ -74,7 +74,7 @@ const NavBar = () => {
         <div className={Style.navbar_container_left}>
           <div className={Style.logo}>
             <Image
-              src={images.logo}
+              src={images.logo2}
               alt="Cyclone NFT Marketpace"
               width={100}
               height={100}
@@ -83,7 +83,7 @@ const NavBar = () => {
           <div className={Style.navbar_container_left_input}>
             <div className={Style.navbar_container_left_box_input_box}>
               <input type="text" placeholder="Search" />
-              <BsSearch onClick={(e) => {}} className={Style.search_icon} />
+              <BsSearch onClick={() => {}} className={Style.search_icon} />
             </div>
           </div>
         </div>
@@ -121,9 +121,7 @@ const NavBar = () => {
           <div className={Style.navbar_container_right_notify}>
             <MdNotifications
               className={Style.notify}
-              onClick={() => {
-                openNotification();
-              }}
+              onClick={() => openNotification()}
             />
             {notification && <Notification />}
           </div>
@@ -140,7 +138,7 @@ const NavBar = () => {
                 alt="Profile"
                 width={40}
                 height={40}
-                onClick={() => openProfile}
+                onClick={() => openProfile()}
               />
               {profile && <Profile />}
             </div>
@@ -154,6 +152,7 @@ const NavBar = () => {
           </div>
         </div>
       </div>
+
       {openSideMenu && (
         <div className={Style.SideBar}>
           <SideBar setOpenSideMenu={setOpenSideMenu} />

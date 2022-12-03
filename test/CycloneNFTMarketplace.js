@@ -67,15 +67,18 @@ describe("CycloneNFTMarketplace", () => {
   });
 
   // describe("Marketplace Tokens", async () => {
-  //   let tokenURI, price, createToken;
-  //   beforeEach(() => async () => {
-  //     tokenURI = "https://unsplash.com/photos/mIg0GL63lFk";
-  //     price = convertToBigNum(0.5);
-  //     createToken = await cycloneNftMarketplace.createToken(tokenURI, price);
-  //   });
-
+  //   let amount, transaction, result, tokenURI, price, createToken;
   //   it("token create", async () => {
-  //     console.log(createToken);
+  //     // beforeEach(() => async () => {
+  //     amount = convertToBigNum(0.01);
+  //     amount = tokenURI = "https://unsplash.com/photos/mIg0GL63lFk";
+  //     price = convertToBigNum(0.002);
+
+  //     // });
+  //     createToken = await cycloneNftMarketplace
+  //       .connect(deployer)
+  //       .createToken(tokenURI, price, { value: amount });
+  //     // console.log(createToken);
   //   });
   // });
 });

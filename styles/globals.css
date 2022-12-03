@@ -21,6 +21,7 @@ a {
   }
   body {
     color: black;
-    background: whitesmoke;
+    background: #fff;
+    /* background: whitesmoke; */
   }
 }
